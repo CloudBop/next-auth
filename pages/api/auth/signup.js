@@ -6,7 +6,6 @@ async function handler(req, res) {
     return;
   }
   const data = req.body;
-  console.log(`data`, data);
   // connect to client
   const { email, password } = data;
   if (
