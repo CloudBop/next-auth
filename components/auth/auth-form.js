@@ -2,21 +2,27 @@ import { useRef, useState } from "react";
 import classes from "./auth-form.module.css";
 
 async function createUser(email, password) {
-  const response = fetch("/api/auth/signup", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-  //
-  const data = await response.json();
+  try {
+    const response = await fetch("/api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
 
-  if (!response.ok) {
-    throw new Error(data.message || "Something went wrong");
+    //
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    // console.log(`error`, error);
+    throw new Error(error.message || "Something went wrong");
   }
+
+  // if (!response.ok) {
+  //   throw new Error(data.message || "Something went wrong");
+  // }
   //
-  return data;
 }
 
 function AuthForm() {
@@ -33,6 +39,7 @@ function AuthForm() {
     const newUserPassword = passwordRef.current.value;
     const newUserEmail = emailRef.current.value;
     //
+    console.log(newUserEmail, newUserPassword);
     //
     if (isLogin) {
       // log user in

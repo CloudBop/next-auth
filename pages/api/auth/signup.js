@@ -1,11 +1,16 @@
 import { hashPassword } from "../../../lib/auth";
 import { connectToDatabase } from "../../../lib/db";
 
-async function handler() {
+async function handler(req, res) {
+  if (req.method !== "POST") {
+    return;
+  }
   const data = req.body;
+  console.log(`data`, data);
   // connect to client
+  const { email, password } = data;
   if (
-    !mail ||
+    !email ||
     !email.includes("@") ||
     !password ||
     password.trim().length < 7
@@ -21,17 +26,23 @@ async function handler() {
   }
 
   const client = await connectToDatabase();
-  const { email, password } = data;
   const db = client.db();
+
+  //
+  const existingUser = await db.collection("users").findOne({ email: email });
+  if (existingUser) {
+    res.status(422).json({ message: "this email already exists" });
+  }
+
   // HASH PASSWORD
-  const hashedPassword = hashPassword(password);
+  const hashedPassword = await hashPassword(password);
   // creates on the fly
   const result = await db.collection("users").insertOne({
     email: email,
     password: hashedPassword
   });
-
-  result.status(201).json({ message: "create user!" });
+  res.status(201).json({ message: "create user!" });
+  client.close();
 }
 
-export default handler();
+export default handler;
