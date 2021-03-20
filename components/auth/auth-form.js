@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { signIn } from "next-auth/client";
 import classes from "./auth-form.module.css";
 
 async function createUser(email, password) {
@@ -13,16 +14,16 @@ async function createUser(email, password) {
 
     //
     const data = await response.json();
-    return data;
+    // if (!response.ok) {
+    //   throw new Error(data.message || "Something went wrong");
+    // }
   } catch (error) {
     // console.log(`error`, error);
     throw new Error(error.message || "Something went wrong");
   }
 
-  // if (!response.ok) {
-  //   throw new Error(data.message || "Something went wrong");
-  // }
   //
+  return data;
 }
 
 function AuthForm() {
@@ -36,20 +37,25 @@ function AuthForm() {
 
   async function submitHandler(evnt) {
     evnt.preventDefault();
-    const newUserPassword = passwordRef.current.value;
-    const newUserEmail = emailRef.current.value;
+    const enteredPassword = passwordRef.current.value;
+    const enteredEmail = emailRef.current.value;
     //
-    console.log(newUserEmail, newUserPassword);
     //
     if (isLogin) {
       // log user in
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: enteredEmail,
+        password: enteredPassword
+      });
+      console.log(`result`, result);
     } else {
       //
       // TODO validate new user credentials - never trust the client
       // create new user
+      // console.log(`Iran`);
       try {
-        const result = await createUser(newUserEmail, newUserPassword);
-        console.log(result);
+        const result = await createUser(enteredEmail, enteredPassword);
       } catch (error) {
         //
       }
