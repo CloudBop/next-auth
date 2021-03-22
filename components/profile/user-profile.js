@@ -11,7 +11,7 @@ function UserProfile() {
   //   //
   //   getSession().then(session => {
   //     if (!session) {
-  //       // navigate away
+  //       // navigate away - resets app router state
   //       window.location.href = "/auth";
   //     } else {
   //       setIsLoading(false);
