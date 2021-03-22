@@ -37,8 +37,8 @@ function AuthForm() {
 
   async function submitHandler(evnt) {
     evnt.preventDefault();
-    const enteredPassword = passwordRef.current.value;
     const enteredEmail = emailRef.current.value;
+    const enteredPassword = passwordRef.current.value;
     //
     //
     if (isLogin) {
@@ -48,7 +48,7 @@ function AuthForm() {
         email: enteredEmail,
         password: enteredPassword
       });
-      console.log(`result`, result);
+      // console.log(`LOGGED IN ?`, result);
     } else {
       //
       // TODO validate new user credentials - never trust the client

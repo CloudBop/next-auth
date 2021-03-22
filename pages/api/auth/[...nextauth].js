@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 // import { isTargetLikeServerless } from "next/dist/next-server/server/config";
-import { veryifyPassword } from "../../../lib/auth";
+import { verifyPassword } from "../../../lib/auth";
 import { connectToDatabase } from "../../../lib/db";
 // config next auth
 export default NextAuth({
@@ -12,7 +12,7 @@ export default NextAuth({
   providers: [
     Providers.Credentials({
       async authorize(credentials) {
-        const client = await connectToDatabase(credentials);
+        const client = await connectToDatabase();
 
         const usersCollection = client.db().collection("users");
 
@@ -25,11 +25,10 @@ export default NextAuth({
           throw new Error("No user found.");
         }
 
-        const isValid = await veryifyPassword(
+        const isValid = await verifyPassword(
           credentials.password,
           user.password
         );
-
         if (!isValid) {
           client.close();
           throw new Error("Could not log you in.");
