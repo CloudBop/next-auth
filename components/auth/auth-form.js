@@ -48,6 +48,10 @@ function AuthForm() {
         email: enteredEmail,
         password: enteredPassword
       });
+
+      if (!result.error) {
+      }
+
       // console.log(`LOGGED IN ?`, result);
     } else {
       //
